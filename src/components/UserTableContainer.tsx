@@ -22,6 +22,11 @@ const UserTableContainer = () => {
     setIsModalOpen(true);
   };
 
+  const handleAddClick = () => {
+    setSelectedUser({ name: "", email: "", password: "" });
+    setIsModalOpen(true);
+  };
+
   const handleModalClose = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
@@ -34,15 +39,23 @@ const UserTableContainer = () => {
     setUsers(updatedUsers);
   };
 
+  const handleUserAdd = (newUser) => {
+    setUsers([...users, newUser]);
+  };
+
   return (
     <>
       <h1>User Management</h1>
+      <button onClick={handleAddClick} className="add-user-button">
+        Add User
+      </button>
       <UserTable users={users} onEditClick={handleEditClick} />
       {isModalOpen && (
         <EditUserModal
           user={selectedUser}
           onClose={handleModalClose}
           onUserUpdate={handleUserUpdate}
+          onUserAdd={handleUserAdd}
         />
       )}
     </>

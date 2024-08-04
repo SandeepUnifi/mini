@@ -41,6 +41,12 @@
       "name": "motogp",
       "email": "motogp@gmail.com",
       "password": "motogp"
+    },
+    {
+      "name": "formula",
+      "email": "f@gmail.com",
+      "password": "formula1",
+      "id": "6cd3"
     }
   ]
 }

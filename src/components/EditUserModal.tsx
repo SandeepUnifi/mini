@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./EditUserModal.css"; // Import the CSS file for modal styling
 
-const EditUserModal = ({ user, onClose, onUserUpdate }) => {
+const EditUserModal = ({ user, onClose, onUserUpdate, onUserAdd }) => {
   const [formData, setFormData] = useState({
     name: user.name,
     email: user.email,
@@ -19,19 +19,31 @@ const EditUserModal = ({ user, onClose, onUserUpdate }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .put(`http://localhost:8085/users/${user.email}`, formData)
-      .then((response) => {
-        onUserUpdate(response.data);
-        onClose();
-      })
-      .catch((error) => console.error("Error updating user:", error));
+    if (user.email) {
+      // Edit existing user
+      axios
+        .put(`http://localhost:8000/users/${user.id}`, formData)
+        .then((response) => {
+          onUserUpdate(response.data);
+          onClose();
+        })
+        .catch((error) => console.error("Error updating user:", error));
+    } else {
+      // Add new user
+      axios
+        .post("http://localhost:8000/users", formData)
+        .then((response) => {
+          onUserAdd(response.data);
+          onClose();
+        })
+        .catch((error) => console.error("Error adding user:", error));
+    }
   };
 
   return (
     <div className="modal">
       <div className="modal-content">
-        <h2>Edit Details</h2>
+        <h2>{user.email ? "Edit Details" : "Add User"}</h2>
         <form onSubmit={handleSubmit}>
           <label>
             Name:
@@ -50,7 +62,7 @@ const EditUserModal = ({ user, onClose, onUserUpdate }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              disabled
+              disabled={!!user.email}
             />
           </label>
           <br />
